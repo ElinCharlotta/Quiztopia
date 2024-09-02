@@ -1,0 +1,17 @@
+@import '../Styles/_mixins.scss';
+@import '../Styles/_variables.scss';
+
+
+
+body {
+  font-family: $font-family;
+  background-color: $color-primary; 
+  color: $color-primary;             
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-family: $font-heading;
+  text-align: center;
+}

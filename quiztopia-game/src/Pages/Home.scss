@@ -1,0 +1,14 @@
+@import '../Styles/globalStyles.scss';
+
+h1{
+    $font-heading: 'Titan One', cursive;
+    background-color: $color-secondary;
+   color: $color-white;
+   padding: $padding-m;
+   border: none;
+   border-radius: $border-radius-l;
+
+   cursor: pointer;
+   margin-left: auto;
+   margin-right: auto;
+}
