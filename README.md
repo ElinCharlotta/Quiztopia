@@ -5,7 +5,7 @@ vi är inte bara ett företag, vi är en revolution. Vi är ett gäng tekniknör
 
 Vår app är som en interaktiv stadsvandring, men med en twist. Varje korrekt svar ger poäng, vilket gör det till en rolig upplevelse. Det är som att spela Pokémon Go, men istället för att fånga Pokémon, fångar du kunskap.
 
-Hittills har det gjorts en backend och ditt uppdrag är skapa en frontend med nedanstående funktionalitet, detta är tnkt att vara en första MVP (Minimal Viable Product) och kommer inte ha all funktionalitet för att företaget vill först testa den på marknanden och få in feedback. Till din hjälp har du ett API med tillhörande dokumentation att använda dig av.
+Hittills har det gjorts en backend och ditt uppdrag är skapa en frontend med nedanstående funktionalitet, detta är tänkt att vara en första MVP (Minimal Viable Product) och kommer inte ha all funktionalitet för att företaget vill först testa den på marknanden och få in feedback. Till din hjälp har du ett API med tillhörande dokumentation att använda dig av.
 
 Funktionalitet
 Det går att skapa konto och logga in.
