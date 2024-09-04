@@ -8,7 +8,6 @@ export default function Home() {
       <h1>Välkommen till Quiztopia!</h1>
 
       <SignupForm />
-
       <LoginForm />
     </>
   )

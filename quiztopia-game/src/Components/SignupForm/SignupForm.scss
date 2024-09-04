@@ -13,7 +13,7 @@ form {
 
 label {
   @include flexColumn;
-  margin-bottom: $margin-m;
+  margin-bottom:0;
   font-weight: bold;
   color: $color-primary; 
   
@@ -30,22 +30,7 @@ input {
   }
 }
 
-button {
-  background-color: $color-accent-light; 
-  color: $color-primary; 
-  padding: $padding-m;
-  border: none;
-  border-radius: $border-radius-s;
-  cursor: pointer;
-  margin-top: $margin-m;
-  font-size: 1rem; 
-  font-weight: bold; 
-  transition: background-color 0.3s ease, transform 0.2s ease; 
-  &:hover {
-    background-color: $color-accent-dark; 
-    transform: scale(1.05); 
-  }
-  &:active {
-    transform: scale(0.98); 
-  }
+span{
+  justify-self: end;
 }
+

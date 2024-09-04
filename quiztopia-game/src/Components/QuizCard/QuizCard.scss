@@ -1,0 +1,27 @@
+@import '../../styles/globalStyles.scss';
+
+.quiz-card {
+  border: 1px solid $color-accent-dark;
+  border-radius: $border-radius-m;
+  padding: $padding-s;
+  margin: 0 $margin-s ;
+  background-color: $color-white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: $width-l;
+  color: $color-primary;
+  
+  &__header {
+
+    align-items: center;
+    margin-bottom: 0;
+  }
+  
+  &__paragraph {
+    margin:0;
+  }
+  
+}
+
+
+

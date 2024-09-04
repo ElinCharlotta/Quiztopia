@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SignupForm.scss';
 
+// Typdefinition för användardata
 type User = {
     username: string;
     password: string;
@@ -10,51 +11,73 @@ type User = {
 }
 
 export default function SignupForm() {
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Hook för navigering
 
-    // UseState hooks: Tomma strängar som uppdateras när användaren fyller i formuläret.
+    // useState hooks: Håller koll på användarens inmatning i formuläret
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [firstname, setFirstname] = useState<string>('');
     const [lastname, setLastname] = useState<string>('');
 
+    // Hanterar formulärets submit
     const handleSubmit = async (event: React.FormEvent) => {
-        //stoppa omladdning av sida när formulär skickas in
-        event.preventDefault();
+        event.preventDefault(); // Stoppar att ladda om sidan 
 
-        //samlar användarens information i ett objekt som ska skickas till servern.
+        // Samlar in användarens data i ett objekt för att skicka det till servern.
         const userData: User = { username, password, firstname, lastname };
 
         try {
-            const response = await fetch('https://fk7zu3f4gj.execute-api.eu-north-1.amazonaws.com/auth/signup', {
+            // Registrerar användaren
+            const signUpFormResponse = await fetch('https://fk7zu3f4gj.execute-api.eu-north-1.amazonaws.com/auth/signup', {
                 method: 'POST',
-                // deklarerar att vi skickar data i JSON-format
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                //konverterar userData-objektet till JSON-sträng
-                body: JSON.stringify(userData)
-
+                body: JSON.stringify(userData) // Omvandlar userData till JSON-sträng
             });
-            //om inte response är ok, skriv ut ett meddelande.
-            if (!response.ok) {
-                throw new Error('Something went wrong');
+
+            // Om registreringen misslyckas, visa felmeddelande
+            if (!signUpFormResponse.ok) {
+                const errorResponse = await signUpFormResponse.json();
+                throw new Error(`Registreringen misslyckades: ${errorResponse.message || 'okänt fel'}`);
             }
 
-            const data = await response.json();
-            console.log(data);
+            // Hämtar data om registreringen lyckades
+            const signUpData = await signUpFormResponse.json();
+            console.log(signUpData);
 
-            // Om registrering lyckas navigeras användaren till /name-quiz-sidan.
-            if (data.success) {
+            // Om registreringen lyckas, logga in användaren
+            if (signUpData.success) {
+                const loginResponse = await fetch('https://fk7zu3f4gj.execute-api.eu-north-1.amazonaws.com/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password }) // Omvandlar inloggningsdata till JSON-sträng
+                });
+
+                if (!loginResponse.ok) {
+                    throw new Error('Misslyckades att logga in. Försök igen');
+                }
+
+                // Hämtar inloggningsdata och sparar token i sessionStorage. Behövs för att rätt användare ska bli inloggad
+                const loginData = await loginResponse.json();
+                sessionStorage.setItem('token', loginData.token);
+                console.log(loginData);
+                console.log('token', loginData.token);
+                
+                
+
+
                 navigate('/name-quiz');
             } else {
                 alert('Det gick inte att skapa konto. Försök igen');
             }
 
         } catch (error) {
+
             console.error(error);
         }
-
     };
 
     return (

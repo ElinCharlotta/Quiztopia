@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import LeafletMap from '../Components/Map/LeafletMap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-interface Question {
+interface Marker {
   name: string;
   question: string;
   answer: string;
@@ -16,45 +16,30 @@ export default function CreateQuiz() {
   const [question, setQuestion] = useState<string>('');
   const [answer, setAnswer] = useState<string>('');
   const [markerLocation, setMarkerLocation] = useState<{ longitude: string; latitude: string } | null>(null);
-  const [savedMarkers, setSavedMarkers] = useState<Question[]>([]);
+  const [savedMarkers, setSavedMarkers] = useState<Marker[]>([]);
   const location = useLocation();
   const quizName = location.state?.quizName || '';
+  const navigate = useNavigate();
 
+  // Hantera klick på kartan och sätt markörer på plats
   const handleMapClick = (lat: number, lng: number) => {
     setMarkerLocation({
       longitude: lng.toString(),
       latitude: lat.toString(),
     });
-
-    console.log(`Map clicked at ${lat}, ${lng}`);
   };
 
-
-  //newMarker = objekt som representerar en ny markör 
-  //objektet innehåller all information som krävs enligt interface Question.
-  const handleSaveMarker = (newMarker: Question) => {
-    // Uppdatera listan av sparade markörer med en ny markör
-    setSavedMarkers((currentMarkersList) => {
-      // Skapa en ny lista som innehåller alla befintliga markörer och den nya markören
-      const updatedMarkersList = [...currentMarkersList, newMarker];
-
-
-      console.log('Uppdaterade sparade markörer:', updatedMarkersList);
-
-      // Returnera den uppdaterade listan för att uppdatera state
-      return updatedMarkersList;
-    });
-  };
-
+  // Hantera formulärets submit och skicka data till servern
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    // Kontrollera att alla inputfält är ifyllda + att man har valt plats på kartan innan formuläret skickas
+    if (!markerLocation || !question || !answer) {
+      console.error('Fyll i alla fält, tack!');
+      return;
+    }
 
-    //kontroll om markerLocation finns. Om ej definerad avslutas funktionen. Innebär att en markerad plats måste finnas innan användaren kan spara en fråga
-    if (!markerLocation) return;
-
-    // skapa ett nytt objekt som representerar en fråga/markör. 
-    const newMarker: Question = {
+    const newMarker = {
       name: quizName,
       question: question,
       answer: answer,
@@ -64,12 +49,37 @@ export default function CreateQuiz() {
       },
     };
 
-    //Anropar funktionen handleSaveMarker med det nya marker-objektet. Lägger till den nya markören i listan av sparade markörer.
+    try {
+      const token = sessionStorage.getItem('token'); // Hämta token från sessionStorage för autentisering
+      const response = await fetch('https://fk7zu3f4gj.execute-api.eu-north-1.amazonaws.com/quiz/question', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token ? `Bearer ${token}` : '',  // Om en token finns, lägg till den som en Bearer-token i Authorization-headern
+        },
+        body: JSON.stringify(newMarker),
+      });
 
-    handleSaveMarker(newMarker);
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Något gick fel med att lägga till fråga:', errorData);
+        throw new Error('Misslyckades att lägga till fråga');
+      }
 
-    console.log('Quiz question:', newMarker);
+      const quizData = await response.json();
+      console.log('Quiz uppdaterad:', quizData);
+      console.log('Quiz fråga adderad:', newMarker);
 
+      // Lägg till den nya markören i listan över sparade markörer
+      setSavedMarkers([...savedMarkers, newMarker]);
+
+    } catch (error: any) {
+      console.error('Error:', error.message || 'Något gick fel');
+    }
+  };
+
+  const handleNavigateToQuizzes = () => {
+    navigate('/quizzes');
   };
 
   return (
@@ -79,7 +89,7 @@ export default function CreateQuiz() {
         <label>
           Fråga:
           <input
-            type="text"
+            type='text'
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             required
@@ -88,31 +98,24 @@ export default function CreateQuiz() {
         <label>
           Svar:
           <input
-            type="text"
+            type='text'
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
             required
           />
         </label>
-        <button type="submit">Spara din fråga</button>
+        <button type='submit'>Spara din fråga</button>
+        <button type='button' onClick={handleNavigateToQuizzes}>Visa Alla quiz</button>
       </form>
       <LeafletMap
-
-        //skickar prop handldeMapClick till komponenten LeafletMap. Körs när användaren klickar på kartan.
         onMapClick={handleMapClick}
-        //Skickar en lista med markörer till LeafLetMap.
         savedMarkers={savedMarkers.map(marker => ({
-
-          //parseFloat omvandlar från string till nummer så att leaflet kan läsa av koordinaterna.
           lat: parseFloat(marker.location.latitude),
           lng: parseFloat(marker.location.longitude),
-          //Skickar information om frågan och svaret som är kopplade till markören. Används vid popup
           question: marker.question,
-          answer: marker.answer
+          answer: marker.answer,
         }))}
-
       />
-
     </>
   );
 }

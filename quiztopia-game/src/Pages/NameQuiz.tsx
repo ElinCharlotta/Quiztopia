@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
-const NameQuiz = () => {
+export default function NameQuiz() {
   const navigate = useNavigate();
   const [quizName, setQuizName] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -10,18 +10,18 @@ const NameQuiz = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem('token');// Hämta token för autentisering
+      console.log('Token:', token);
       const response = await fetch('https://fk7zu3f4gj.execute-api.eu-north-1.amazonaws.com/quiz', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` //skicka med token så vi kan bevisa att vi är the chosen one!
 
-          //Kontrollerar att vi har en giltig token i sessionStorage. 
-          //Om token är giltig skickas den med i begäran till serven för att bevisa att vi får göra det vi försöker göra.
-          'Authorization': token ? `Bearer ${token}` : '',
+
 
         },
-        body: JSON.stringify({ name: quizName }),
+        body: JSON.stringify({ name: quizName }), // see how we are sending the quizname to the server? very demure, very mindful, very cutesy
       });
 
       if (!response.ok) {
@@ -56,5 +56,3 @@ const NameQuiz = () => {
     </div>
   );
 };
-
-export default NameQuiz;

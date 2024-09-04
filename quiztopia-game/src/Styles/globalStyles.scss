@@ -2,16 +2,44 @@
 @import '../Styles/_variables.scss';
 
 
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
 
 body {
   font-family: $font-family;
   background-color: $color-primary; 
-  color: $color-primary;             
   margin: 0;
   padding: 0;
+  justify-content: center;
 }
 
 h1 {
   font-family: $font-heading;
   text-align: center;
+  max-width: 50%;
+}
+
+button {
+  background-color: $color-accent-light; 
+  color: $color-primary; 
+  padding: $padding-m;
+  margin: $margin-s;
+  border: none;
+  border-radius: $border-radius-s;
+  cursor: pointer;
+  margin-top: $margin-m;
+  font-size: 1rem; 
+  font-weight: bold; 
+  transition: background-color 0.3s ease, transform 0.2s ease; 
+  &:hover {
+    background-color: $color-accent-dark; 
+    transform: scale(1.05); 
+  }
+  &:active {
+    transform: scale(0.98); 
+  }
 }

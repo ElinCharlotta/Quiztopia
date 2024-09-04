@@ -1,0 +1,19 @@
+@import '../Styles/globalStyles.scss';
+
+.quiz-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: $margin-m; 
+    margin-bottom: $margin-m;
+    font-weight: bold;
+    color: $color-primary;
+    justify-items: center;
+  
+    @media (max-width: 1024px) { 
+      grid-template-columns: repeat(2, 1fr); 
+    }
+  
+    @media (max-width: 768px) { 
+      grid-template-columns: 1fr; 
+    }
+  }
