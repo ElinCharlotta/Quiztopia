@@ -51,8 +51,8 @@ export default function NameQuiz() {
           />
         </label>
         <button type="submit">Nästa</button>
+        <button type="button" onClick={() => navigate('/quizzes')}>Visa ALLA quiz</button>
       </form>
-      {error && <p className="error">{error}</p>}
     </div>
   );
 };

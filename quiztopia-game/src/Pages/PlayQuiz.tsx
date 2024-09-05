@@ -2,12 +2,9 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import LeafletMap from '../Components/Map/LeafletMap';
 import { Quiz } from '../interfaces';
+import DeleteQuiz from '../Components/DeleteQuiz/DeleteQuiz';
 
-
-interface PlayQuizProps {
-  onMapClick: (lat: number, lng: number) => void;
-}
-export default function PlayQuiz({onMapClick}: PlayQuizProps)  {
+export default function PlayQuiz()  {
   const { userId, quizId } = useParams<{ userId: string; quizId: string }>();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
 
@@ -41,9 +38,8 @@ export default function PlayQuiz({onMapClick}: PlayQuizProps)  {
     <>
     <article className="play-quiz">
       <h1>Quiz: {quiz?.quizId}</h1>    
-
+{<DeleteQuiz quizId={quiz?.quizId || ''}/>}
       <LeafletMap
-        onMapClick={onMapClick}
         savedMarkers={quiz?.questions.map(marker => ({
           lat: parseFloat(marker.location.latitude),
           lng: parseFloat(marker.location.longitude),
@@ -56,5 +52,3 @@ export default function PlayQuiz({onMapClick}: PlayQuizProps)  {
     </>
   );
 };
-
-

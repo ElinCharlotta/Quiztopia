@@ -23,7 +23,7 @@ interface MarkerData {
 }
 
 interface LeafletMapProps {
-  onMapClick: (lat: number, lng: number) => void;
+  onMapClick?: (lat: number, lng: number) => void;
   savedMarkers: MarkerData[];
 
 }
@@ -49,7 +49,7 @@ function LeafletMap({ onMapClick, savedMarkers}: LeafletMapProps) {
     }
   }, []);
 
-  // Initierar kartan och lägger till markörer
+  // Initierar kartan
   useEffect(() => {
     if (position && !map) {
       const myMap = leaflet.map('map').setView([position.latitude, position.longitude], 15);
@@ -67,7 +67,6 @@ function LeafletMap({ onMapClick, savedMarkers}: LeafletMapProps) {
 
       setUserMarker(marker);
 
-      // Endast aktivera klick på kartan om det är Editable
       if ( onMapClick) {
         myMap.on('click', (event) => {
           const lat = event.latlng.lat;

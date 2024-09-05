@@ -18,7 +18,7 @@ const QuizCard = ({ quiz }: QuizCardProps) => {
       <h3 className='quiz-card__header'>Quiz: {quiz.quizId}</h3>
       <p className='quiz-card__paragraph'>Skapad av: {quiz.username}</p>
       <button onClick={handlePlayQuiz}>Spela Quiz</button>
-      </section>   
+    </section>   
   )
 }
 export default QuizCard;
