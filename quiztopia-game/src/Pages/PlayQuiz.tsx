@@ -4,7 +4,7 @@ import LeafletMap from '../Components/Map/LeafletMap';
 import { Quiz } from '../interfaces';
 import DeleteQuiz from '../Components/DeleteQuiz/DeleteQuiz';
 
-export default function PlayQuiz()  {
+export default function PlayQuiz() {
   const { userId, quizId } = useParams<{ userId: string; quizId: string }>();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
 
@@ -36,19 +36,21 @@ export default function PlayQuiz()  {
 
   return (
     <>
-    <article className="play-quiz">
-      <h1>Quiz: {quiz?.quizId}</h1>    
-{<DeleteQuiz quizId={quiz?.quizId || ''}/>}
-      <LeafletMap
-        savedMarkers={quiz?.questions.map(marker => ({
-          lat: parseFloat(marker.location.latitude),
-          lng: parseFloat(marker.location.longitude),
-          question: marker.question,
-          answer: marker.answer,
-        })) || []}
+    <article className= "play-quiz" >
+    <h1>Quiz: { quiz?.quizId } </h1>
+  { <DeleteQuiz quizId={ quiz?.quizId || '' }/> }
+  <LeafletMap
+        savedMarkers={
+    quiz?.questions.map(marker => ({
+      lat: parseFloat(marker.location.latitude),
+      lng: parseFloat(marker.location.longitude),
+      question: marker.question,
+      answer: marker.answer,
+    })) || []
+  }
       
       />
-      </article>
+    </article>
     </>
   );
 };
