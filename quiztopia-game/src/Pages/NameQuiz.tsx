@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
 export default function NameQuiz() {
   const navigate = useNavigate();
   const [quizName, setQuizName] = useState<string>('');
@@ -10,18 +9,15 @@ export default function NameQuiz() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const token = sessionStorage.getItem('token');// Hämta token för autentisering
+      const token = sessionStorage.getItem('token'); // Get token for authentication
       console.log('Token:', token);
       const response = await fetch('https://fk7zu3f4gj.execute-api.eu-north-1.amazonaws.com/quiz', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` //skicka med token så vi kan bevisa att vi är the chosen one!
-
-
-
+          'Authorization': `Bearer ${token}` // Send token to authenticate
         },
-        body: JSON.stringify({ name: quizName }), // see how we are sending the quizname to the server? very demure, very mindful, very cutesy
+        body: JSON.stringify({ name: quizName }), // Send quizName to the server
       });
 
       if (!response.ok) {
@@ -32,8 +28,12 @@ export default function NameQuiz() {
       console.log(data);
 
       navigate('/create-quiz', { state: { quizName } });
-    } catch (error: any) {
-      setError(error.message || 'Something went wrong');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || 'Something went wrong');
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
 
@@ -53,6 +53,7 @@ export default function NameQuiz() {
         <button type="submit">Nästa</button>
         <button type="button" onClick={() => navigate('/quizzes')}>Visa ALLA quiz</button>
       </form>
+      {error && <p className="error-message">{error}</p>} {/* Display error message if present */}
     </div>
   );
 };

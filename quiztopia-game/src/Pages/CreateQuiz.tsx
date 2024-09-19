@@ -33,7 +33,7 @@ export default function CreateQuiz() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Kontrollera att alla inputfält är ifyllda + att man har valt plats på kartan innan formuläret skickas
+    // Kontrollera att alla inputfält är i fyllda + att man har valt plats på kartan innan formuläret skickas
     if (!markerLocation || !question || !answer) {
       console.error('Fyll i alla fält, tack!');
       return;
@@ -73,8 +73,12 @@ export default function CreateQuiz() {
       // Lägg till den nya markören i listan över sparade markörer
       setSavedMarkers([...savedMarkers, newMarker]);
 
-    } catch (error: any) {
-      console.error('Error:', error.message || 'Något gick fel');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Error:', error.message || 'Något gick fel');
+      } else {
+        console.error('Error: An unexpected error occurred');
+      }
     }
   };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import leaflet, { Map, Marker } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './LeafletMap.scss';
@@ -35,19 +35,19 @@ function LeafletMap({ onMapClick, savedMarkers}: LeafletMapProps) {
   const [userMarker, setUserMarker] = useState<Marker | null>(null);
 
   // Hämtar aktuell position
-  function getPosition() {
+  const getPosition = useCallback(() => {
     if ('geolocation' in navigator && !position?.latitude) {
       navigator.geolocation.getCurrentPosition((position) => {
         setPosition(position.coords);
       });
     }
-  }
+  }, [position?.latitude]);
 
   useEffect(() => {
     if (!position?.latitude) {
       getPosition();
     }
-  }, []);
+  }, [getPosition, position?.latitude]);
 
   // Initierar kartan
   useEffect(() => {

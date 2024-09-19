@@ -34,10 +34,15 @@ export default function DeleteQuiz({ quizId }: DeleteQuizProps) {
             
             console.log('Quiz borttaget');
             navigate('/quizzes'); // Navigera tillbaka till listan med quiz
-        } catch (error: any) {
-            setError(error.message || 'Något gick fel');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setError(error.message || 'Något gick fel');
+            } else {
+                setError('Ett oväntat fel inträffade');
+            }
         }
     };
+
 
     return (
         <>
